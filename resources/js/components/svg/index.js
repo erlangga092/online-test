@@ -1,0 +1,9 @@
+export { default as KelasSVG } from "./KelasSVG";
+export { default as MapelSVG } from "./MapelSVG";
+export { default as ReportSVG } from "./ReportSVG";
+export { default as SesiUjianSVG } from "./SesiUjianSVG";
+export { default as SiswaSVG } from "./SiswaSVG";
+export { default as UjianSVG } from "./UjianSVG";
+export { default as DashboardSVG } from "./DashboardSVG";
+export { default as MapelSidebarSVG } from "./MapelSidebarSVG";
+export { default as ReportSidebarSVG } from "./ReportSidebarSVG";

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
+use App\Models\ExamGroup;
 use App\Models\ExamSession;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -47,6 +49,14 @@ class ExamSessionController extends Controller
         return redirect()->route('admin.exam_sessions.index');
     }
 
+    public function show($id)
+    {
+        $exam_session = ExamSession::with('exam.classroom', 'exam.lesson')->findOrFail($id);
+        $exam_session->setRelation('exam_groups', $exam_session->exam_groups()->with('student.classroom')->paginate(5));
+
+        return Inertia::render('Admin/Exam-Session/Show', compact('exam_session'));
+    }
+
     public function edit($id)
     {
         $exam_session = ExamSession::findOrFail($id);
@@ -83,5 +93,40 @@ class ExamSessionController extends Controller
         } catch (\Throwable $th) {
             return back()->withErrors($th->getMessage());
         }
+    }
+
+    public function createEnrolle(ExamSession $exam_session)
+    {
+        $exam = $exam_session->exam;
+        $students_enrolled = ExamGroup::where('exam_id', $exam->id)
+            ->where('exam_session_id', $exam_session->id)
+            ->pluck('student_id')
+            ->all();
+
+        $students = Student::with('classroom')
+            ->where('classroom_id', $exam->classroom_id)
+            ->whereNotIn('id', $students_enrolled)
+            ->get();
+
+        return Inertia::render('Admin/Exam-Group/Create', compact('students', 'exam', 'exam_session'));
+    }
+
+    public function storeEnrolle(Request $request, ExamSession $exam_session)
+    {
+        $this->validate($request, [
+            'student_id' => 'required'
+        ]);
+
+        foreach ($request->student_id as $student_id) {
+            $student = Student::findOrFail($student_id);
+
+            ExamGroup::create([
+                'exam_id' => $request->exam_id,
+                'exam_session_id' => $exam_session->id,
+                'student_id' => $student->id
+            ]);
+        }
+
+        return redirect()->route('admin.exam_sessions.show', $exam_session->id);
     }
 }

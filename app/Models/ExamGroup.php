@@ -12,4 +12,19 @@ class ExamGroup extends Model
     protected $fillable = [
         'exam_id', 'exam_session_id', 'student_id'
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function exam_session()
+    {
+        return $this->belongsTo(ExamSession::class);
+    }
+
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
+    }
 }

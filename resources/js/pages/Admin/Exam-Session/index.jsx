@@ -18,11 +18,9 @@ const ExamSession = ({ exam_sessions }) => {
     e.preventDefault();
     SwalDelete({
       link: `/admin/exam_sessions/${ID}`,
-      title: "Ujian",
+      title: "Sesi Ujian",
     });
   };
-
-  console.log(exam_sessions);
 
   return (
     <>

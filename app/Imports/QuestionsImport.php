@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Imports;
+
+use App\Models\Question;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+
+class QuestionsImport implements ToModel, WithHeadingRow, WithValidation
+{
+    /**
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function model(array $row)
+    {
+        return new Question([
+            'exam_id' => (int) $row['exam_id'],
+            'question' => $row['question'],
+            'option_1' => $row['option_1'],
+            'option_2' => $row['option_2'],
+            'option_3' => $row['option_3'],
+            'option_4' => $row['option_4'],
+            'option_5' => $row['option_5'],
+            'answer' => $row['answer']
+        ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'exam_id' => 'required:exists,exams,id',
+            'question' => 'required',
+            'option_1' => 'required',
+            'option_2' => 'required',
+            'option_3' => 'required',
+            'option_4' => 'required',
+            'option_5' => 'required',
+            'answer' => 'required',
+        ];
+    }
+}

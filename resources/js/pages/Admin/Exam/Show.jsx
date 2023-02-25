@@ -1,4 +1,4 @@
-import { AdminWrapper, BackButton, HeaderForm } from "@/components";
+import { AdminWrapper, BackButton, HeaderForm, Pagination } from "@/components";
 import { SwalDelete } from "@/helpers";
 import { LayoutAdmin } from "@/layouts";
 import { Head, Link } from "@inertiajs/react";
@@ -173,7 +173,10 @@ const Show = ({ exam }) => {
                               </ol>
                             </td>
                             <div className="text-center">
-                              <Link className="btn btn-sm btn-info border-0 shadow me-2">
+                              <Link
+                                href={`/admin/exams/${exam?.id}/questions/${question?.id}/edit`}
+                                className="btn btn-sm btn-info border-0 shadow me-2"
+                              >
                                 <i className="fa fa-pencil-alt"></i>
                               </Link>
                               <button
@@ -188,6 +191,7 @@ const Show = ({ exam }) => {
                         ))}
                       </tbody>
                     </table>
+                    <Pagination links={exam?.questions?.links} />
                   </div>
                 </div>
               </div>

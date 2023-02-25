@@ -19,6 +19,11 @@
       content: ".";
       display: block;
     }
+
+    .form-select {
+      /* padding: .625rem 1rem; */
+      font-size: 16px;
+    }
   </style>
 
   @viteReactRefresh

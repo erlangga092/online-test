@@ -9,8 +9,9 @@ import { LayoutAdmin } from "@/layouts";
 import { Head, router } from "@inertiajs/react";
 import { Editor } from "@tinymce/tinymce-react";
 import React, { useState } from "react";
+import { SwalUpdate } from "@/helpers";
 
-const BoxEditor = ({ title, onEditorChange, isError }) => {
+const BoxEditor = ({ title, onEditorChange, isError, value }) => {
   return (
     <tr>
       <td
@@ -24,6 +25,7 @@ const BoxEditor = ({ title, onEditorChange, isError }) => {
       <td>
         <Editor
           apiKey="no-api-key"
+          value={value}
           init={{
             height: 130,
             menubar: false,
@@ -42,15 +44,15 @@ const BoxEditor = ({ title, onEditorChange, isError }) => {
   );
 };
 
-const Create = ({ errors, exam }) => {
+const Edit = ({ errors, exam, question }) => {
   const [form, setForm] = useState({
-    question: "",
-    option_1: "",
-    option_2: "",
-    option_3: "",
-    option_4: "",
-    option_5: "",
-    answer: 1,
+    question: question?.question,
+    option_1: question?.option_1,
+    option_2: question?.option_2,
+    option_3: question?.option_3,
+    option_4: question?.option_4,
+    option_5: question?.option_5,
+    answer: question?.answer,
   });
 
   const answerOption = [
@@ -63,13 +65,17 @@ const Create = ({ errors, exam }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    router.post(`/admin/exams/${exam?.id}/questions`, form);
+    SwalUpdate({
+      title: "Soal Ujian",
+      link: `/admin/exams/${exam?.id}/questions/${question?.id}/update`,
+      form,
+    });
   };
 
   return (
     <>
       <Head>
-        <title>Tambah Soal - Aplikasi Ujian Online</title>
+        <title>Edit Soal - Aplikasi Ujian Online</title>
       </Head>
       <LayoutAdmin>
         <AdminWrapper>
@@ -78,10 +84,7 @@ const Create = ({ errors, exam }) => {
               <BackButton link={`/admin/exams/${exam?.id}`} />
               <div className="card border-0 shadow">
                 <div className="card-body">
-                  <HeaderForm
-                    title="Tambah Soal"
-                    icon="fa fa-question-circle"
-                  />
+                  <HeaderForm title="Edit Soal" icon="fa fa-question-circle" />
 
                   <form onSubmit={onSubmit}>
                     <div className="table-responsive mb-4">
@@ -89,72 +92,66 @@ const Create = ({ errors, exam }) => {
                         <tbody>
                           <BoxEditor
                             title="Soal"
-                            onEditorChange={(_, editor) =>
+                            value={form?.question}
+                            onEditorChange={(newVal, editor) =>
                               setForm({
                                 ...form,
-                                question: editor.getContent({
-                                  format: "text",
-                                }),
+                                question: newVal,
                               })
                             }
                             isError={errors?.question}
                           />
                           <BoxEditor
                             title="Pilihan A"
-                            onEditorChange={(_, editor) =>
+                            value={form?.option_1}
+                            onEditorChange={(newVal, editor) =>
                               setForm({
                                 ...form,
-                                option_1: editor.getContent({
-                                  format: "text",
-                                }),
+                                option_1: newVal,
                               })
                             }
                             isError={errors?.option_1}
                           />
                           <BoxEditor
                             title="Pilihan B"
-                            onEditorChange={(_, editor) =>
+                            value={form?.option_2}
+                            onEditorChange={(newVal, editor) =>
                               setForm({
                                 ...form,
-                                option_2: editor.getContent({
-                                  format: "text",
-                                }),
+                                option_2: newVal,
                               })
                             }
                             isError={errors?.option_2}
                           />
                           <BoxEditor
                             title="Pilihan C"
-                            onEditorChange={(_, editor) =>
+                            value={form?.option_3}
+                            onEditorChange={(newVal, editor) =>
                               setForm({
                                 ...form,
-                                option_3: editor.getContent({
-                                  format: "text",
-                                }),
+                                option_3: newVal,
                               })
                             }
                             isError={errors?.option_3}
                           />
                           <BoxEditor
                             title="Pilihan D"
-                            onEditorChange={(_, editor) =>
+                            value={form?.option_4}
+                            onEditorChange={(newVal, editor) =>
                               setForm({
                                 ...form,
-                                option_4: editor.getContent({
-                                  format: "text",
-                                }),
+                                option_4: newVal,
                               })
                             }
                             isError={errors?.option_4}
                           />
                           <BoxEditor
                             title="Pilihan E"
-                            onEditorChange={(_, editor) =>
+                            value={form?.option_5}
+                            onEditorChange={(newVal, editor) =>
                               setForm({
                                 ...form,
-                                option_5: editor.getContent({
-                                  format: "text",
-                                }),
+                                option_5: newVal,
                               })
                             }
                             isError={errors?.option_5}
@@ -210,4 +207,4 @@ const Create = ({ errors, exam }) => {
   );
 };
 
-export default Create;
+export default Edit;

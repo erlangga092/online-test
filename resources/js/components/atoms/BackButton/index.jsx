@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/react";
 const BackButton = ({ link }) => {
   return (
     <Link
-      className="btn btn-md btn-primary border-0 shadow mb-3"
+      className="btn btn-md btn-primary border-0 shadow mb-3 me-2"
       type="button"
       href={link}
     >

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ExamSession;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,7 +41,20 @@ Route::prefix('admin')->group(function () {
 
             Route::post('/exams/{exam}/questions', [\App\Http\Controllers\Admin\ExamController::class, 'storeQuestion'])->name('admin.exams.storeQuestion');
 
+            Route::get('/exams/{exam}/questions/import', [\App\Http\Controllers\Admin\ExamController::class, 'importQuestion'])->name('admin.exams.importQuestion');
+
+            Route::post('/exams/{exam}/questions/import', [\App\Http\Controllers\Admin\ExamController::class, 'storeImportQuestion'])->name('admin.exams.storeImportQuestion');
+
+            Route::get('/exams/{exam}/questions/{question}/edit', [\App\Http\Controllers\Admin\ExamController::class, 'editQuestion'])->name('admin.exams.editQuestion');
+
+            Route::put('/exams/{exam}/questions/{question}/update', [\App\Http\Controllers\Admin\ExamController::class, 'updateQuestion'])->name('admin.exams.updateQuestion');
+
             Route::delete('/exams/{exam}/questions/{question}', [\App\Http\Controllers\Admin\ExamController::class, 'destroyQuestion'])->name('admin.exams.destroyQuestion');
+        });
+
+        // exam-session
+        Route::group(array(), function () {
+            Route::resource('/exam_sessions', \App\Http\Controllers\Admin\ExamSessionController::class, ['as' => 'admin']);
         });
     });
 });

@@ -1,5 +1,6 @@
 import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
+import "react-datepicker/dist/react-datepicker.css";
 
 createInertiaApp({
   resolve: (name) => {

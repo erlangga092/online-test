@@ -20,7 +20,7 @@ const FormInput = ({
         value={value}
         onChange={onChange}
       />
-      {isError && <div className="alert alert-danger mt-3">{isError}</div>}
+      {isError && <div className="alert alert-danger mt-2">{isError}</div>}
     </div>
   );
 };

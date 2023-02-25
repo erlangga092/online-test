@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\QuestionsImport;
 use App\Models\Classroom;
 use App\Models\Exam;
 use App\Models\Lesson;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExamController extends Controller
 {
@@ -142,6 +144,37 @@ class ExamController extends Controller
         return redirect()->route('admin.exams.show', $exam->id);
     }
 
+    public function editQuestion(Exam $exam, $id)
+    {
+        $question = Question::findOrFail($id);
+        return Inertia::render('Admin/Question/Edit', compact('exam', 'question'));
+    }
+
+    public function updateQuestion(Request $request, Exam $exam, Question $question)
+    {
+        $this->validate($request, [
+            'question' => 'required',
+            'option_1' => 'required',
+            'option_2' => 'required',
+            'option_3' => 'required',
+            'option_4' => 'required',
+            'option_5' => 'required',
+            'answer' => 'required',
+        ]);
+
+        $question->update([
+            'question' => $request->question,
+            'option_1' => $request->option_1,
+            'option_2' => $request->option_2,
+            'option_3' => $request->option_3,
+            'option_4' => $request->option_4,
+            'option_5' => $request->option_5,
+            'answer' => $request->answer
+        ]);
+
+        return redirect()->route('admin.exams.show', $exam->id);
+    }
+
     public function destroyQuestion(Exam $exam, $id)
     {
         try {
@@ -151,5 +184,20 @@ class ExamController extends Controller
         } catch (\Throwable $th) {
             return back()->withErrors($th->getMessage());
         }
+    }
+
+    public function importQuestion(Exam $exam)
+    {
+        return Inertia::render('Admin/Question/Import', compact('exam'));
+    }
+
+    public function storeImportQuestion(Request $request, Exam $exam)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xlx,xlsx'
+        ]);
+
+        Excel::import(new QuestionsImport(), $request->file('file'));
+        return redirect()->route('admin.exams.show', $exam->id);
     }
 }

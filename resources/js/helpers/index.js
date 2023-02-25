@@ -1,3 +1,3 @@
-import { SwalDelete, SwalUpdate } from "./swal";
+import { SwalDelete, SwalUpdate, SwalImport } from "./swal";
 
-export { SwalDelete, SwalUpdate };
+export { SwalDelete, SwalUpdate, SwalImport };

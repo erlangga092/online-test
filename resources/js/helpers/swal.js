@@ -69,3 +69,25 @@ export const SwalUpdate = ({ link, title, form }) => {
     }
   );
 };
+
+export const SwalImport = ({ link, title, form }) => {
+  router.post(link, form, {
+    onSuccess: () => {
+      Swal.fire({
+        title: "Success!",
+        text: `${title} berhasil ditambahkan!`,
+        icon: "success",
+        timer: 1000,
+        showConfirmButton: false,
+      });
+    },
+    onError: (errors) => {
+      Swal.fire({
+        title: "Failed",
+        text: errors[0],
+        icon: "failed",
+        showConfirmButton: true,
+      });
+    },
+  });
+};

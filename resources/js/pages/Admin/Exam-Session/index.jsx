@@ -22,6 +22,8 @@ const ExamSession = ({ exam_sessions }) => {
     });
   };
 
+  console.log(exam_sessions);
+
   return (
     <>
       <Head>
@@ -96,8 +98,42 @@ const ExamSession = ({ exam_sessions }) => {
                     <td className="text-center">
                       {exam_session?.exam_groups?.length}
                     </td>
-                    <td>{exam_session?.start_time}</td>
-                    <td>{exam_session?.end_time}</td>
+                    <td>
+                      <p>
+                        {new Intl.DateTimeFormat("id", {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        }).format(new Date(exam_session?.start_time))}
+                      </p>
+                      <p>
+                        Pukul{" "}
+                        {new Intl.DateTimeFormat("id", {
+                          hour: "numeric",
+                          minute: "numeric",
+                          timeZoneName: "short",
+                        }).format(new Date(exam_session?.start_time))}
+                      </p>
+                    </td>
+                    <td>
+                      <p>
+                        {new Intl.DateTimeFormat("id", {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        }).format(new Date(exam_session?.end_time))}
+                      </p>
+                      <p>
+                        Pukul{" "}
+                        {new Intl.DateTimeFormat("id", {
+                          hour: "numeric",
+                          minute: "numeric",
+                          timeZoneName: "short",
+                        }).format(new Date(exam_session?.end_time))}
+                      </p>
+                    </td>
                     <td className="text-center">
                       <Link
                         href={`/admin/exam_sessions/${exam_session?.id}`}

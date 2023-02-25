@@ -33,6 +33,14 @@ Route::prefix('admin')->group(function () {
         Route::resource('/students', \App\Http\Controllers\Admin\StudentController::class, ['as' => 'admin']);
 
         // exam
-        Route::resource('/exams', \App\Http\Controllers\Admin\ExamController::class, ['as' => 'admin']);
+        Route::group(array(), function () {
+            Route::resource('/exams', \App\Http\Controllers\Admin\ExamController::class, ['as' => 'admin']);
+
+            Route::get('/exams/{exam}/questions/create', [\App\Http\Controllers\Admin\ExamController::class, 'createQuestion'])->name('admin.exams.createQuestion');
+
+            Route::post('/exams/{exam}/questions', [\App\Http\Controllers\Admin\ExamController::class, 'storeQuestion'])->name('admin.exams.storeQuestion');
+
+            Route::delete('/exams/{exam}/questions/{question}', [\App\Http\Controllers\Admin\ExamController::class, 'destroyQuestion'])->name('admin.exams.destroyQuestion');
+        });
     });
 });

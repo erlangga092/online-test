@@ -18,6 +18,10 @@ class LessonController extends Controller
         return Inertia::render('Admin/Lesson/index', compact('lessons'));
     }
 
+    public function show($id)
+    {
+    }
+
     public function create()
     {
         return Inertia::render('Admin/Lesson/Create');

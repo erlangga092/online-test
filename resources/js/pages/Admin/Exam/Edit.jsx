@@ -9,29 +9,32 @@ import {
 } from "@/components";
 import { LayoutAdmin } from "@/layouts";
 import { Head, router } from "@inertiajs/react";
+import { Editor } from "@tinymce/tinymce-react";
 import React, { useState } from "react";
 import { SwalUpdate } from "@/helpers";
 
-const Edit = ({ errors, student, classrooms }) => {
+const Edit = ({ errors, exam, classrooms, lessons }) => {
   const [form, setForm] = useState({
-    classroom_id: student?.classroom_id,
-    nisn: student?.nisn,
-    name: student?.name,
-    gender: student?.gender,
-    password: "",
-    password_confirmation: "",
+    title: exam?.title,
+    lesson_id: exam?.lesson_id,
+    classroom_id: exam?.lesson_id,
+    duration: exam?.duration,
+    description: exam?.description,
+    random_question: exam?.random_question,
+    random_answer: exam?.random_answer,
+    show_answer: exam?.show_answer,
   });
 
-  const gender = [
-    { id: "L", name: "Laki-laki", value: "L" },
-    { id: "P", name: "Perempuan", value: "P" },
+  const enumBool = [
+    { id: "Y", name: "Y" },
+    { id: "N", name: "N" },
   ];
 
   const onSubmit = (e) => {
     e.preventDefault();
     SwalUpdate({
-      link: `/admin/students/${student?.id}`,
-      title: "Siswa",
+      title: "Ujian",
+      link: `/admin/exams/${exam?.id}`,
       form,
     });
   };
@@ -39,52 +42,84 @@ const Edit = ({ errors, student, classrooms }) => {
   return (
     <>
       <Head>
-        <title>Edit Siswa - Aplikasi Ujian Online</title>
+        <title>Edit Ujian - Aplikasi Ujian Online</title>
       </Head>
       <LayoutAdmin>
         <AdminWrapper>
           <div className="row">
             <div className="col md-12">
-              <BackButton link="/admin/students" />
+              <BackButton link="/admin/exams" />
               <div className="card border-0 shadow">
                 <div className="card-body">
-                  <HeaderForm title="Edit Siswa" icon="fa fa-user" />
+                  <HeaderForm title="Edit Ujian" icon="fa fa-edit" />
 
                   <form onSubmit={onSubmit}>
                     <div className="row">
-                      <div className="col-md-6">
-                        <FormInput
-                          label="Nisn"
-                          name="nisn"
-                          value={form?.nisn}
-                          placeholder="Masukkan Nisn Siswa"
-                          onChange={(e) =>
+                      <FormInput
+                        label="Nama Ujian"
+                        name="title"
+                        value={form?.title}
+                        placeholder="Masukkan Nama Ujian"
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            title: e?.target?.value,
+                          })
+                        }
+                        isError={errors?.title}
+                      ></FormInput>
+                    </div>
+
+                    <div className="row">
+                      <div className="mb-4">
+                        <label htmlFor="description">Deskripsi</label>
+                        <Editor
+                          apiKey="no-api-key"
+                          value={form?.description}
+                          init={{
+                            height: 500,
+                            menubar: false,
+                            plugins: ["lists link image emoticons"],
+                            toolbar:
+                              "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons",
+                            content_style:
+                              "body { font-family: Quicksand, Helvetica, Arial, sans-serif; font-size: 18px }",
+                          }}
+                          onEditorChange={(ev, editor) =>
                             setForm({
                               ...form,
-                              nisn: e?.target?.value,
+                              description: editor.getContent({
+                                format: "text",
+                              }),
                             })
                           }
-                          isError={errors?.nisn}
-                        ></FormInput>
-                      </div>
-                      <div className="col-md-6">
-                        <FormInput
-                          label="Nama Lengkap"
-                          name="name"
-                          value={form?.name}
-                          placeholder="Masukkan Nama Lengkap Siswa"
-                          onChange={(e) =>
-                            setForm({
-                              ...form,
-                              name: e?.target?.value,
-                            })
-                          }
-                          isError={errors?.name}
-                        ></FormInput>
+                        />
+
+                        {errors?.description && (
+                          <div className="alert alert-danger mt-2">
+                            {errors?.description}
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div className="row">
+                      <div className="col-md-6">
+                        <FormSelect
+                          label="Mata Pelajaran"
+                          name="lesson_id"
+                          value={form?.lesson_id}
+                          data={lessons}
+                          keyVal="title"
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              lesson_id: e?.target?.value,
+                            })
+                          }
+                          isError={errors?.lesson_id}
+                        ></FormSelect>
+                      </div>
                       <div className="col-md-6">
                         <FormSelect
                           label="Kelas"
@@ -101,55 +136,74 @@ const Edit = ({ errors, student, classrooms }) => {
                           isError={errors?.classroom_id}
                         ></FormSelect>
                       </div>
+                    </div>
+
+                    <div className="row">
                       <div className="col-md-6">
                         <FormSelect
-                          label="Gender"
-                          name="gender"
-                          value={form?.gender}
-                          data={gender}
+                          label="Acak Pertanyaan"
+                          name="random_question"
+                          value={form?.random_question}
+                          data={enumBool}
                           keyVal="name"
                           onChange={(e) =>
                             setForm({
                               ...form,
-                              gender: e?.target?.value,
+                              random_question: e?.target?.value,
                             })
                           }
-                          isError={errors?.gender}
+                          isError={errors?.random_question}
+                        ></FormSelect>
+                      </div>
+                      <div className="col-md-6">
+                        <FormSelect
+                          label="Acak Jawaban"
+                          name="random_answer"
+                          value={form?.random_answer}
+                          data={enumBool}
+                          keyVal="name"
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              random_answer: e?.target?.value,
+                            })
+                          }
+                          isError={errors?.random_answer}
                         ></FormSelect>
                       </div>
                     </div>
 
                     <div className="row">
                       <div className="col-md-6">
-                        <FormInput
-                          label="Password"
-                          name="password"
-                          type="password"
-                          value={form?.password}
-                          placeholder="Masukkan Password"
+                        <FormSelect
+                          label="Tampilkan Hasil"
+                          name="random_answer"
+                          value={form?.random_answer}
+                          data={enumBool}
+                          keyVal="name"
                           onChange={(e) =>
                             setForm({
                               ...form,
-                              password: e?.target?.value,
+                              random_answer: e?.target?.value,
                             })
                           }
-                          isError={errors?.password}
-                        ></FormInput>
+                          isError={errors?.random_answer}
+                        ></FormSelect>
                       </div>
                       <div className="col-md-6">
                         <FormInput
-                          label="Konfirmasi Password"
-                          name="password_confirmation"
-                          type="password"
-                          value={form?.password_confirmation}
-                          placeholder="Masukkan Konfirmasi Password"
+                          label="Durasi"
+                          type="number"
+                          name="duration"
+                          value={form?.duration}
+                          placeholder="Masukkan Durasi"
                           onChange={(e) =>
                             setForm({
                               ...form,
-                              password_confirmation: e?.target?.value,
+                              duration: e?.target?.value,
                             })
                           }
-                          isError={errors?.password_confirmation}
+                          isError={errors?.duration}
                         ></FormInput>
                       </div>
                     </div>

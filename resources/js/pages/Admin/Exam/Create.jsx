@@ -9,6 +9,7 @@ import {
 } from "@/components";
 import { LayoutAdmin } from "@/layouts";
 import { Head, router } from "@inertiajs/react";
+import { Editor } from "@tinymce/tinymce-react";
 import React, { useState } from "react";
 
 const Create = ({ errors, classrooms, lessons }) => {
@@ -22,6 +23,11 @@ const Create = ({ errors, classrooms, lessons }) => {
     random_answer: "Y",
     show_answer: "N",
   });
+
+  const enumBool = [
+    { id: "Y", name: "Y" },
+    { id: "N", name: "N" },
+  ];
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -60,6 +66,38 @@ const Create = ({ errors, classrooms, lessons }) => {
                     </div>
 
                     <div className="row">
+                      <div className="mb-4">
+                        <label htmlFor="description">Deskripsi</label>
+                        <Editor
+                          apiKey="no-api-key"
+                          init={{
+                            height: 500,
+                            menubar: false,
+                            plugins: ["lists link image emoticons"],
+                            toolbar:
+                              "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons",
+                            content_style:
+                              "body { font-family: Quicksand, Helvetica, Arial, sans-serif; font-size: 16px }",
+                          }}
+                          onEditorChange={(ev, editor) =>
+                            setForm({
+                              ...form,
+                              description: editor.getContent({
+                                format: "text",
+                              }),
+                            })
+                          }
+                        />
+
+                        {errors?.description && (
+                          <div className="alert alert-danger mt-2">
+                            {errors?.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="row">
                       <div className="col-md-6">
                         <FormSelect
                           label="Mata Pelajaran"
@@ -91,6 +129,76 @@ const Create = ({ errors, classrooms, lessons }) => {
                           }
                           isError={errors?.classroom_id}
                         ></FormSelect>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-6">
+                        <FormSelect
+                          label="Acak Pertanyaan"
+                          name="random_question"
+                          value={form?.random_question}
+                          data={enumBool}
+                          keyVal="name"
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              random_question: e?.target?.value,
+                            })
+                          }
+                          isError={errors?.random_question}
+                        ></FormSelect>
+                      </div>
+                      <div className="col-md-6">
+                        <FormSelect
+                          label="Acak Jawaban"
+                          name="random_answer"
+                          value={form?.random_answer}
+                          data={enumBool}
+                          keyVal="name"
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              random_answer: e?.target?.value,
+                            })
+                          }
+                          isError={errors?.random_answer}
+                        ></FormSelect>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-6">
+                        <FormSelect
+                          label="Tampilkan Hasil"
+                          name="random_answer"
+                          value={form?.random_answer}
+                          data={enumBool}
+                          keyVal="name"
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              random_answer: e?.target?.value,
+                            })
+                          }
+                          isError={errors?.random_answer}
+                        ></FormSelect>
+                      </div>
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Durasi"
+                          type="number"
+                          name="duration"
+                          value={form?.duration}
+                          placeholder="Masukkan Durasi"
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              duration: e?.target?.value,
+                            })
+                          }
+                          isError={errors?.duration}
+                        ></FormInput>
                       </div>
                     </div>
 

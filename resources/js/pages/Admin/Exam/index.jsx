@@ -18,7 +18,7 @@ const Exam = ({ exams }) => {
     e.preventDefault();
     SwalDelete({
       link: `/admin/exams/${ID}`,
-      title: "Siswa",
+      title: "Ujian",
     });
   };
 
@@ -77,6 +77,12 @@ const Exam = ({ exams }) => {
                     <td>{exam?.classroom?.title}</td>
                     <td>{exam?.questions?.length}</td>
                     <td className="text-center">
+                      <Link
+                        href={`/admin/exams/${exam?.id}`}
+                        className="btn btn-sm btn-primary border-0 shadow me-2"
+                      >
+                        <i className="fa fa-plus-circle"></i>
+                      </Link>
                       <Link
                         href={`/admin/exams/${exam?.id}/edit`}
                         className="btn btn-sm btn-info border-0 shadow me-2"

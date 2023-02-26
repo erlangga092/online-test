@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\ExamSession;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,5 +83,23 @@ Route::prefix('admin')->group(function () {
             Route::delete('/exam_sessions/{exam_session}/enrolle/{exam_session_id}/destroy', [\App\Http\Controllers\Admin\ExamSessionController::class, 'destroyEnrolle'])
                 ->name('admin.exam_sessions.destroyEnrolle');
         });
+    });
+});
+
+
+Route::get('/', function () {
+    if (auth()->guard('student')->check()) {
+        return redirect()->route('student.dashboard');
+    }
+
+    return Inertia::render('Student/Login/index');
+});
+
+Route::post('/students/login', \App\Http\Controllers\Student\LoginController::class)
+    ->name('student.login');
+
+// student group
+Route::prefix('student')->group(function () {
+    Route::group(['middleware' => 'student'], function () {
     });
 });

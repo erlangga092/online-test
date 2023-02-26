@@ -2,6 +2,7 @@ import { AdminWrapper, BackButton, HeaderForm, Pagination } from "@/components";
 import { LayoutAdmin } from "@/layouts";
 import { Head, Link } from "@inertiajs/react";
 import React from "react";
+import { SwalDelete } from "@/helpers";
 
 const TableRowDetail = ({ label, value }) => {
   return (
@@ -39,6 +40,14 @@ function formatDateTime(v) {
 }
 
 const Show = ({ exam_session }) => {
+  const onDestroy = (e, ID) => {
+    e.preventDefault();
+    SwalDelete({
+      title: "Siswa",
+      link: `/admin/exam_sessions/${exam_session?.id}/enrolle/${ID}/destroy`,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -131,8 +140,21 @@ const Show = ({ exam_session }) => {
                                     exam_session?.exam_groups?.per_page}
                               </td>
                               <td>{v?.student?.name}</td>
-                              <td>{v?.student?.classroom?.title}</td>
-                              <td>{v?.student?.gender}</td>
+                              <td className="text-center">
+                                {v?.student?.classroom?.title}
+                              </td>
+                              <td className="text-center">
+                                {v?.student?.gender}
+                              </td>
+                              <td className="text-center">
+                                <button
+                                  className="btn btn-sm btn-danger border-0"
+                                  type="button"
+                                  onClick={(e) => onDestroy(e, v?.id)}
+                                >
+                                  <i className="fa fa-trash"></i>
+                                </button>
+                              </td>
                             </tr>
                           ))
                         ) : (

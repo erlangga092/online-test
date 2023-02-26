@@ -117,7 +117,7 @@ const Create = ({ errors, exam, exam_session, students }) => {
                             ))
                           ) : (
                             <tr>
-                              <td>
+                              <td colSpan={4} className="text-center">
                                 <strong>No Data Found !</strong>
                               </td>
                             </tr>

@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 const LayoutStudent = ({ children }) => {
+  const { auth } = usePage().props;
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-transparent navbar-dark navbar-theme-primary mb-4 shadow">
@@ -15,16 +17,18 @@ const LayoutStudent = ({ children }) => {
           </Link>
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav me-auto mb-2 mb-md-0"></ul>
-            <form className="d-flex">
-              <Link
-                href="/logout"
-                method="POST"
-                className="btn btn-secondary shadow"
-                as="button"
-              >
-                LOGOUT
-              </Link>
-            </form>
+            {auth?.student && (
+              <form className="d-flex">
+                <Link
+                  href="/logout"
+                  method="POST"
+                  className="btn btn-secondary shadow"
+                  as="button"
+                >
+                  LOGOUT
+                </Link>
+              </form>
+            )}
           </div>
         </div>
       </nav>
